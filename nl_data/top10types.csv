@@ -1,0 +1,94 @@
+album,,count,words
+808s & Heartbreak,other,328,other
+808s & Heartbreak,person,97,person
+808s & Heartbreak,location,37,location
+808s & Heartbreak,number,21,number
+808s & Heartbreak,event,16,event
+808s & Heartbreak,work_of_art,11,work_of_art
+808s & Heartbreak,consumer_good,3,consumer_good
+808s & Heartbreak,organization,1,organization
+Graduation,other,578,other
+Graduation,person,287,person
+Graduation,location,72,location
+Graduation,event,36,event
+Graduation,consumer_good,30,consumer_good
+Graduation,number,25,number
+Graduation,work_of_art,21,work_of_art
+Graduation,organization,10,organization
+Jesus is King,other,300,other
+Jesus is King,person,139,person
+Jesus is King,location,28,location
+Jesus is King,number,19,number
+Jesus is King,event,18,event
+Jesus is King,work_of_art,13,work_of_art
+Jesus is King,consumer_good,5,consumer_good
+Jesus is King,organization,2,organization
+Kids See Ghosts,other,279,other
+Kids See Ghosts,person,103,person
+Kids See Ghosts,location,26,location
+Kids See Ghosts,work_of_art,11,work_of_art
+Kids See Ghosts,consumer_good,6,consumer_good
+Kids See Ghosts,event,5,event
+Kids See Ghosts,number,3,number
+Kids See Ghosts,organization,2,organization
+Late Registration,other,920,other
+Late Registration,person,304,person
+Late Registration,location,89,location
+Late Registration,number,63,number
+Late Registration,consumer_good,42,consumer_good
+Late Registration,work_of_art,39,work_of_art
+Late Registration,event,31,event
+Late Registration,organization,27,organization
+My Beautiful Dark Twisted Fantasy,other,991,other
+My Beautiful Dark Twisted Fantasy,person,252,person
+My Beautiful Dark Twisted Fantasy,location,86,location
+My Beautiful Dark Twisted Fantasy,number,55,number
+My Beautiful Dark Twisted Fantasy,event,48,event
+My Beautiful Dark Twisted Fantasy,consumer_good,32,consumer_good
+My Beautiful Dark Twisted Fantasy,work_of_art,25,work_of_art
+My Beautiful Dark Twisted Fantasy,organization,20,organization
+The College Dropout,other,1312,other
+The College Dropout,person,554,person
+The College Dropout,location,143,location
+The College Dropout,number,125,number
+The College Dropout,consumer_good,76,consumer_good
+The College Dropout,work_of_art,62,work_of_art
+The College Dropout,organization,60,organization
+The College Dropout,event,34,event
+The College Dropout,price,2,price
+The College Dropout,date,1,date
+The Life of Pablo,other,959,other
+The Life of Pablo,person,348,person
+The Life of Pablo,location,106,location
+The Life of Pablo,number,85,number
+The Life of Pablo,consumer_good,34,consumer_good
+The Life of Pablo,organization,34,organization
+The Life of Pablo,work_of_art,24,work_of_art
+The Life of Pablo,event,21,event
+The Life of Pablo,date,1,date
+The Life of Pablo,price,1,price
+Watch the Throne,other,614,other
+Watch the Throne,person,236,person
+Watch the Throne,location,92,location
+Watch the Throne,number,60,number
+Watch the Throne,event,39,event
+Watch the Throne,consumer_good,35,consumer_good
+Watch the Throne,work_of_art,24,work_of_art
+Watch the Throne,organization,16,organization
+Watch the Throne,date,1,date
+Yeezus,other,464,other
+Yeezus,person,160,person
+Yeezus,location,32,location
+Yeezus,number,30,number
+Yeezus,consumer_good,24,consumer_good
+Yeezus,event,22,event
+Yeezus,organization,21,organization
+Yeezus,work_of_art,6,work_of_art
+ye,other,371,other
+ye,person,102,person
+ye,number,21,number
+ye,consumer_good,18,consumer_good
+ye,event,14,event
+ye,work_of_art,7,work_of_art
+ye,location,5,location
+ye,organization,3,organization

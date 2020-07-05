@@ -10,6 +10,9 @@ import variables
 import ast
 
 
+plot_funs.plot_wordcloud()
 plot_funs.word_pie_plots()
+#plot_funs.word_bar_plots()
+plot_funs.sentiment_song()
 plot_funs.sentiment_density_plot()
 plot_funs.sentiment_barplot()

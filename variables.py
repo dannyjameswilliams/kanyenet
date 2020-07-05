@@ -21,3 +21,9 @@ ye_cols = np.char.upper(["#c6c6c4", "#122231", "#536b8b", "#7a8ba5", "#69af9a", 
 ksg_cols = np.char.upper(["#d58e78", "#3983a1", "#739da8", "#9fced6", "#a13945", "#c46b3e", "#93a4a7", "#c25b57", "#cfd2aa", "#4cc4ec"])
 jik_cols = np.char.upper(["#0423af", "#9d9674", "#043cdf", "#0431cd", "#053ccf", "#51589c", "#0e228a", "#6b7491", "#314cba", "#414974"])
 all_album_cols = np.array([cd_cols, lr_cols, g_cols, eoe_cols, mbdtf_cols, wtt_cols, yz_cols, tlop_cols, ye_cols, ksg_cols, jik_cols])
+
+scale_cols_blue = ["#6ebbeb", "#0e98da", "#0064a7", "#144d87", "#213c5e"]
+scale_cols_green = ["#144b31", "#33725a","#3d8b6e","#568d65","#80ba84"]
+
+# Stop words
+stopwords  = ["ourselves", "hers", "between", "yourself", "but", "again", "there", "about", "once", "during", "out", "very", "having", "with", "they", "own", "an", "be", "some", "for", "do", "its", "yours", "such", "into", "of", "most", "itself", "other", "off", "is", "s", "am", "or", "who", "as", "from", "him", "each", "the", "themselves", "until", "below", "are", "we", "these", "your", "his", "through", "don", "nor", "me", "were", "her", "more", "himself", "this", "down", "should", "our", "their", "while", "above", "both", "up", "to", "ours", "had", "she", "all", "no", "when", "at", "any", "before", "them", "same", "and", "been", "have", "in", "will", "on", "does", "yourselves", "then", "that", "because", "what", "over", "why", "so", "can", "did", "not", "now", "under", "he", "you", "herself", "has", "just", "where", "too", "only", "myself", "which", "those", "i", "after", "few", "whom", "t", "being", "if", "theirs", "my", "against", "a", "by", "doing", "it", "how", "further", "was", "here", "than"]

@@ -110,16 +110,20 @@ def sentiment_song():
     plt.show()
     
 
-from wordcloud import WordCloud
+from wordcloud import WordCloud, ImageColorGenerator
 from PIL import Image
 def plot_wordcloud():
     
-    kanye_mask = np.array(Image.open("images/kanye_mask2.png"))
-    kanye_mask[kanye_mask > 230] = 255
-    kanye_mask[kanye_mask == 0] = 255
+    kanye_mask = np.array(Image.open("images/kanye_mask1.jpg"))
+    kanye_mask[kanye_mask > 240] = 255
+    #kanye_mask[kanye_mask == 0] = 255
+    
+    kanye_colouring = ImageColorGenerator(kanye_mask)
     
     text = open(os.path.join("nl_data/all_words.txt")).read()
     wc = WordCloud(background_color="white", stopwords = stopwords, mask=kanye_mask).generate(text)
-    plt.imshow(wc, interpolation='bilinear')
+    
+    
+    plt.imshow(wc.recolor(color_func=kanye_colouring), interpolation="bilinear")
     plt.axis("off")
     plt.show()

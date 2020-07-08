@@ -10,7 +10,8 @@ import variables
 import ast
 
 
-plot_funs.plot_wordcloud()
+#plot_funs.plot_wordcloud()
+#plot_funs.top10_words()
 plot_funs.word_pie_plots()
 #plot_funs.word_bar_plots()
 plot_funs.sentiment_song()

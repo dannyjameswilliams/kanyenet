@@ -2,9 +2,13 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import os
+import matplotlib.image as im
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.patches as patches
 from variables import *
 import ast
+from PIL import Image
 
 def word_pie_plots():
     # Read data
@@ -15,17 +19,55 @@ def word_pie_plots():
     
     # Set up variables for plotting
     albums = top10words.album.unique()
-    fig, axs = plt.subplots(4,3)
+    fig, axs = plt.subplots(2,6)
     axs = axs.ravel()
     
     # Loop over each album, plot separate pie chart for each
     for i in np.arange(len(albums)):
+        
+        # Plot Pie chart
         d = top10words[top10words["album"] == albums[i]]
-        axs[i] = d[["count", "words"]].plot(kind="pie", y = "count", ax = axs[i], labels=d["words"], legend=None, colors = all_album_cols[i])
+        axs[i] = d[["count", "words"]].plot(kind="pie", y = "count", ax = axs[i], labels=d["words"], legend=None, colors = all_album_cols[i], startangle = 180)
         axs[i].set_ylabel("")
-        axs[i].set_title(albums[i], fontweight = "bold")
-    fig.suptitle("Top 10 Elements by Album", fontweight="bold")
+        #axs[i].set_title(albums[i], fontweight = "bold", fontfamily="serif")
+
+        # Read image (saved in variables.py)
+        im_fn = "images/album_covers/" + album_filenames[i]
+        image = plt.imread(im_fn)
+        
+        # Create circle patch centred in middle
+        circle = patches.Circle((0,0), 0.8, fc = "white")
+        axs[i].add_patch(circle)
+        
+        # Add image on top of plot
+        zoom = 0.475
+        if i == 6: zoom = 0.7
+        imagebox = OffsetImage(image, zoom=0.475, clip_path=circle, zorder=-10, alpha=0.67)
+        ab = AnnotationBbox(imagebox, (0,0), xycoords='data', pad=0, frameon=False)
+        axs[i].add_artist(ab)
+               
+        
+    #fig.suptitle("Top 10 Entities by Album", fontweight="bold")
     plt.show()
+
+    
+    
+def top10_words():
+    df = pd.read_csv("nl_data/top10_overall.csv")
+    ax = plt.figure()
+    
+    ax.text(0.5, 0.75, "Top 10 Entities Overall", fontweight="bold", 
+           multialignment = "center")
+    for i in np.arange(df.shape[0]):
+        s = str(i+1) + ": " + str(df["words"].iloc[i])
+        ax.text(0.5, 0.75-(i+1)*0.05, s, ma = "left")
+    
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
+    plt.grid(None)
+    plt.show()
+    
+    
 
 def word_bar_plots():
     # Read data
@@ -115,15 +157,22 @@ from PIL import Image
 def plot_wordcloud():
     
     kanye_mask = np.array(Image.open("images/kanye_mask1.jpg"))
-    kanye_mask[kanye_mask > 240] = 255
+    kanye_mask[kanye_mask > 245] = 255
     #kanye_mask[kanye_mask == 0] = 255
     
     kanye_colouring = ImageColorGenerator(kanye_mask)
     
     text = open(os.path.join("nl_data/all_words.txt")).read()
-    wc = WordCloud(background_color="white", stopwords = stopwords, mask=kanye_mask).generate(text)
+    wc = WordCloud(background_color="white", 
+                   stopwords = stopwords,
+                   mask = kanye_mask,
+                   include_numbers = True,
+                   width = 200,
+                   height = 300
+                  ).generate(text)
     
-    
+    plt.figure(figsize=(20,24))
     plt.imshow(wc.recolor(color_func=kanye_colouring), interpolation="bilinear")
     plt.axis("off")
+    plt.tight_layout()
     plt.show()

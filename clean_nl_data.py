@@ -19,10 +19,13 @@ def remove_plurals(A, name = "words", top10=True):
             rec = np.append(rec, [[np.where(duplicates)[0][0],i]], axis=0)
             
     for j in np.arange(np.shape(rec)[0]):
-        loc_nonplural = rec[0, 0]
-        loc_plural = rec[0, 1]
+        loc_nonplural = rec[j, 0]
+        loc_plural = rec[j, 1]
         
         A["count"].iloc[loc_nonplural] += A["count"].iloc[loc_plural]
+        
+    for j in np.arange(np.shape(rec)[0]):
+        loc_plural = rec[j, 1]
         drop_ind = A.index[loc_plural]
         A = A.drop(axis="index", labels=drop_ind)
         
@@ -59,8 +62,9 @@ def getallwords(A):
     x2 = x.split(" ")
     np.random.shuffle(x2)
     return(" ".join(x2))
-
-if __name__ == "main":
+print(__name__)
+if __name__ == "__main__":
+    
     # Top words by album
     top15words = pd.read_csv("nl_data/top15words.csv")
     top15words = top15words[["album", "count", "words"]]
@@ -72,12 +76,14 @@ if __name__ == "main":
     drop_ind = top15words.index[top15words["words"] == "love lock-down"]
     top15words = top15words.drop(axis="index", labels=drop_ind)
 
+    # Censor curse words
+    censored_words = top15words["words"].apply(censor)
+    top15words["words"] = censored_words
+
+    
     # Remove plurals
     top10words = top15words.groupby("album").apply(remove_plurals)
 
-    # Censor curse words
-    censored_words = top10words["words"].apply(censor)
-    top10words["words"] = censored_words
 
 
 

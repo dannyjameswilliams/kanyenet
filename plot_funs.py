@@ -19,7 +19,8 @@ def word_pie_plots():
     
     # Set up variables for plotting
     albums = top10words.album.unique()
-    fig, axs = plt.subplots(2,6)
+    dpi=96
+    fig, axs = plt.subplots(6,2, figsize = (700/dpi, 1680/dpi))
     axs = axs.ravel()
     
     # Loop over each album, plot separate pie chart for each
@@ -27,7 +28,7 @@ def word_pie_plots():
         
         # Plot Pie chart
         d = top10words[top10words["album"] == albums[i]]
-        axs[i] = d[["count", "words"]].plot(kind="pie", y = "count", ax = axs[i], labels=d["words"], legend=None, colors = all_album_cols[i], startangle = 180)
+        axs[i] = d[["count", "words"]].plot(kind="pie", y = "count", ax = axs[i], labels=d["words"], legend=None, colors = all_album_cols[i], startangle = 180, textprops={'fontsize': 12})
         axs[i].set_ylabel("")
         #axs[i].set_title(albums[i], fontweight = "bold", fontfamily="serif")
 
@@ -40,15 +41,20 @@ def word_pie_plots():
         axs[i].add_patch(circle)
         
         # Add image on top of plot
-        zoom = 0.475
-        if i == 6: zoom = 0.7
-        imagebox = OffsetImage(image, zoom=0.475, clip_path=circle, zorder=-10, alpha=0.67)
+        zoom = 0.35
+        if i == 6: zoom +=  0.1
+        imagebox = OffsetImage(image, zoom=zoom, clip_path=circle, zorder=-10, alpha=0.67)
         ab = AnnotationBbox(imagebox, (0,0), xycoords='data', pad=0, frameon=False)
         axs[i].add_artist(ab)
-               
+
+    axs[len(albums)].axis("off")
+    axs[len(albums)].grid("off")
+    
         
     #fig.suptitle("Top 10 Entities by Album", fontweight="bold")
-    plt.show()
+    plt.savefig("images/top10words_notitles_raw.png", 
+                quality = 100
+               )
 
     
     
@@ -102,7 +108,19 @@ def sentiment_barplot():
     g2 = g2.set_xticklabels(sentiment_magnitude.album.unique(), rotation=60, horizontalalignment='right')
     plt.show()
 
+
+def sentiment_errorplot():
+    # Read data
+    album_sentiment = pd.read_csv("nl_data/album_sentiment.csv")
+    album_magnitude = pd.read_csv("nl_data/album_magnitude.csv")
+
+    # Combine dataframes
+    sentiment_magnitude = album_sentiment[["album", "mean"]].rename(columns={"mean":"Sentiment"})
+    sentiment_magnitude.loc[:,"Magnitude"] = album_magnitude.loc[:,"mean"]
+    sentiment_magnitude = sentiment_magnitude.melt(id_vars=["album"])
     
+    
+
 def sentiment_density_plot():
     # Read raw data
     raw = pd.read_csv("nl_data/raw_nl_data.csv")

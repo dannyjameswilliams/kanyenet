@@ -78,10 +78,14 @@ def mean_sd(A, name):
 
 def sort_by_album(A):
     from variables import album_order
-    A["album_key"] = pd.Categorical(A["album"], album_order)
-    return(A.sort_values(by="album_key"))
-
-
-if __name__ == "__main__":
+    inds = A.columns
+    if "album" not in A.columns: 
+        alb_bool = ["album" == i for i in A.index.names]
+        A["album"] = A.index.levels[np.where(alb_bool)[0][0]]
     
+    A["album_key"] = pd.Categorical(A["album"], album_order)
+    A = A.sort_values(by="album_key")
+    return(A[inds])
+
+
     

@@ -6,6 +6,9 @@ album_order = ["The College Dropout", "Late Registration", "Graduation", "808s &
 
 # album colours
 colours = np.char.upper(["#ab5918", "#311505", "#c74ac7", "#d1dad9", "#ce1d34", "#a6894e", "#caccd5", "#f58c57", "#1c2b48", "#e4554a", "#001da3"])
+from PIL import ImageColor
+colours_rgb = [ImageColor.getcolor(c, "RGB") for c in colours]
+colours_rgb = [tuple(i/255 for i in a) for a in colours_rgb]
 sns.set_palette(sns.color_palette(colours))
 sns.set(style="whitegrid")
 

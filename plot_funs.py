@@ -113,12 +113,49 @@ def sentiment_errorplot():
     # Read data
     album_sentiment = pd.read_csv("nl_data/album_sentiment.csv")
     album_magnitude = pd.read_csv("nl_data/album_magnitude.csv")
-
-    # Combine dataframes
-    sentiment_magnitude = album_sentiment[["album", "mean"]].rename(columns={"mean":"Sentiment"})
-    sentiment_magnitude.loc[:,"Magnitude"] = album_magnitude.loc[:,"mean"]
-    sentiment_magnitude = sentiment_magnitude.melt(id_vars=["album"])
+    album_sentiment["type"] = "sentiment" 
+    album_magnitude["type"] = "magnitude" 
     
+    
+    # Combine dataframes
+    sentiment_magnitude = pd.concat([album_sentiment, album_magnitude])
+    sentiment_magnitude = sentiment_magnitude[["album", "mean", "sd", "type"]]
+    
+    figs, axs = plt.subplots(2, 1, sharex=True)
+    axs[0].bar(x = album_sentiment["album"], 
+               height = album_sentiment["mean"],
+               ecolor = colours,
+               color = [a + (0.6,) for a in colours_rgb],
+               linewidth = 0,
+               yerr = album_sentiment["sd"])
+    axs[0].scatter(album_sentiment["album"], 
+                album_sentiment["mean"], 
+                color = colours_rgb,
+                marker='o')
+    axs[0].set_ylabel("Sentiment")
+    axs[1].bar(x = album_magnitude["album"], 
+               height = album_magnitude["mean"],
+               ecolor = colours,
+               color = [a + (0.6,) for a in colours_rgb],
+               linewidth = 0,
+               yerr = album_magnitude["sd"])
+    axs[1].scatter(album_magnitude["album"], 
+                album_magnitude["mean"], 
+                color = colours_rgb,
+                marker='o')
+    axs[1].set_ylabel("Magnitude")
+    
+    for ax in axs:
+        ax.tick_params(labelrotation=90)
+        ax.grid(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["top"].set_visible(False)
+        #ax.spines["bottom"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+
+    plt.tight_layout()
+    plt.box(on=None)
+    plt.show()
     
 
 def sentiment_density_plot():
@@ -149,6 +186,35 @@ def sentiment_density_plot():
     plt.subplots_adjust(top=0.9)
     g = g.fig.suptitle("Sentiment Density", fontweight="bold")
 
+    plt.show()
+    
+
+def sent_mag_density():
+    # Read raw data
+    raw = pd.read_csv("nl_data/raw_nl_data.csv")
+    
+    # Define function to be applied across albums
+    def applyf(A, name = "sentiment"):
+        n = len(A.sentences)
+        df = pd.DataFrame(index=np.arange(0), columns=[name])
+        for i in np.arange(n):
+            s  = A.sentences.iloc[i]
+            s2 = ast.literal_eval(s[1:(len(s)-1)])
+            d = pd.DataFrame.from_records(s2, index=[name]).T
+            df = df.append(d)
+        df["album"] = A.album.iloc[0]
+        return(df)
+    
+    # Group by album and use applyf
+    sentiment_totals = applyf(raw, "sentiment")
+    magnitude_totals = applyf(raw, "magnitude")
+    
+    figs, axs = plt.subplots(1,2, sharey=True)
+    axs[0] = sns.distplot(sentiment_totals["sentiment"].values, bins=10)
+    axs[1] = sns.distplot(magnitude_totals["magnitude"].values, bins=10)
+    axs[0].set_xlabel("Sentiment")
+    axs[1].set_xlabel("Magnitude")
+    axs[0].set_ylabel("Density")
     plt.show()
 
 def sentiment_song():
@@ -194,3 +260,19 @@ def plot_wordcloud():
     plt.axis("off")
     plt.tight_layout()
     plt.show()
+    
+    
+def long_words():
+    raw = pd.read_pickle("nl_data/raw_nl_data")
+    
+    n = len(raw)
+    all_words_5 = np.empty([0], dtype="<U30")
+    for i in np.arange(n):
+        words = np.array(list(raw["words"][i][0].keys()))
+        count = np.array(list(raw["words"][i][0].values()))
+        all_words_5 = np.append(all_words_5, words[count > 5])
+    
+    all_lens = [len(a) for a in all_words_5]
+    sns.distplot(all_lens, bins=10);
+    plt.show()
+    

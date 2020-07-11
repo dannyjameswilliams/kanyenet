@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import operator
 from functools import reduce
+import ast
 
 def remove_plurals(A, name = "words", top10=True):
     
@@ -88,4 +89,18 @@ def sort_by_album(A):
     return(A[inds])
 
 
+def sentence_sentiment(A):
+    n = len(A.sentences)
+    df = pd.DataFrame(index=np.arange(0), columns=["sentiment"])
+    for i in np.arange(n):
+        s  = A.sentences.iloc[i]
+        s2 = ast.literal_eval(s[1:(len(s)-1)])
+        d = pd.DataFrame.from_records(s2, index=["sentiment"]).T
+        df = df.append(d)
+    df["album"] = A.album.iloc[0]
+    return(df)
+    
+def add_noise(A):
+    A["noise"] = np.random.uniform(size=len(A))
+    return(A)
     

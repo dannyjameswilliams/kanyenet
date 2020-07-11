@@ -159,28 +159,9 @@ def sentiment_errorplot():
     
 
 def sentiment_density_plot():
-    # Read raw data
-    raw = pd.read_csv("nl_data/raw_nl_data.csv")
     
-    # Define function to be applied across albums
-    def applyf(A):
-        n = len(A.sentences)
-        df = pd.DataFrame(index=np.arange(0), columns=["sentiment"])
-        for i in np.arange(n):
-            s  = A.sentences.iloc[i]
-            s2 = ast.literal_eval(s[1:(len(s)-1)])
-            d = pd.DataFrame.from_records(s2, index=["sentiment"]).T
-            df = df.append(d)
-        df["album"] = A.album.iloc[0]
-        return(df)
+    sentiment_totals = pd.read_csv("nl_data/sentiment_totals.csv")
     
-    # Group by album and use applyf
-    sentiment_groups = raw.groupby("album")
-    sentiment_totals = sentiment_groups.apply(applyf)
-    
-    # Sort and use FacetGrid to separate and plot
-    sentiment_totals["album_key"] = pd.Categorical(sentiment_totals["album"], album_order)
-    sentiment_totals = sentiment_totals.sort_values("album_key")
     g = sns.FacetGrid(sentiment_totals, col='album', hue = "album", palette = sns.color_palette(colours), col_wrap = 6)
     g.map(sns.distplot, "sentiment").set_titles("{col_name}", fontweight="bold")
     plt.subplots_adjust(top=0.9)
@@ -188,35 +169,11 @@ def sentiment_density_plot():
 
     plt.show()
     
-
-def sent_mag_density():
-    # Read raw data
-    raw = pd.read_csv("nl_data/raw_nl_data.csv")
-    
-    # Define function to be applied across albums
-    def applyf(A, name = "sentiment"):
-        n = len(A.sentences)
-        df = pd.DataFrame(index=np.arange(0), columns=[name])
-        for i in np.arange(n):
-            s  = A.sentences.iloc[i]
-            s2 = ast.literal_eval(s[1:(len(s)-1)])
-            d = pd.DataFrame.from_records(s2, index=[name]).T
-            df = df.append(d)
-        df["album"] = A.album.iloc[0]
-        return(df)
-    
-    # Group by album and use applyf
-    sentiment_totals = applyf(raw, "sentiment")
-    magnitude_totals = applyf(raw, "magnitude")
-    
-    figs, axs = plt.subplots(1,2, sharey=True)
-    axs[0] = sns.distplot(sentiment_totals["sentiment"].values, bins=10)
-    axs[1] = sns.distplot(magnitude_totals["magnitude"].values, bins=10)
-    axs[0].set_xlabel("Sentiment")
-    axs[1].set_xlabel("Magnitude")
-    axs[0].set_ylabel("Density")
+    ax = sns.distplot(sentiment_totals["sentiment"].values, bins=10)
+    ax.set_xlabel("Sentiment")
+    ax.set_ylabel("Density")
     plt.show()
-
+    
 def sentiment_song():
     # Read raw data
     raw = pd.read_pickle("nl_data/raw_nl_data")

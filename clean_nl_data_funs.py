@@ -65,9 +65,7 @@ def getallwords(A):
     np.random.shuffle(x2)
     return(" ".join(x2))
 
-def capitalise(A):
-    capital = ["god", "jesus"]
-    replacements = ["God", "Jesus"]
+
 
 def mean_sd(A, name):
     m = np.mean(A[name])

@@ -54,59 +54,7 @@ def word_pie_plots():
     #fig.suptitle("Top 10 Entities by Album", fontweight="bold")
     plt.savefig("images/top10words_notitles_raw.png", 
                 quality = 100
-               )
-
-    
-    
-def top10_words():
-    df = pd.read_csv("nl_data/top10_overall.csv")
-    ax = plt.figure()
-    
-    ax.text(0.5, 0.75, "Top 10 Entities Overall", fontweight="bold", 
-           multialignment = "center")
-    for i in np.arange(df.shape[0]):
-        s = str(i+1) + ": " + str(df["words"].iloc[i])
-        ax.text(0.5, 0.75-(i+1)*0.05, s, ma = "left")
-    
-    plt.xlim(0, 1)
-    plt.ylim(0, 1)
-    plt.grid(None)
-    plt.show()
-    
-    
-
-def word_bar_plots():
-    # Read data
-    top10words = pd.read_csv("nl_data/top10words.csv")
-    top10words = top10words[["album", "count", "words"]]
-    top10words["album_key"] = pd.Categorical(top10words["album"], album_order)
-    top10words = top10words.sort_values(by=["album_key", "count"], ascending=[True, False])
-    
-    # Set up variables for plotting
-    albums = top10words.album.unique()
-    
-    # Seaborn FacetGrid for multiple plots
-    g = sns.FacetGrid(top10words, col = "album", hue = "album", col_wrap = 6, palette = sns.color_palette(colours), sharex="none", sharey="none")
-    g2 = g.map(sns.barplot, "words", "count")
-    
-    plt.show()
-    
-def sentiment_barplot():
-    # Read data
-    album_sentiment = pd.read_csv("nl_data/album_sentiment.csv")
-    album_magnitude = pd.read_csv("nl_data/album_magnitude.csv")
-
-    # Combine dataframes
-    sentiment_magnitude = album_sentiment[["album", "mean"]].rename(columns={"mean":"Sentiment"})
-    sentiment_magnitude.loc[:,"Magnitude"] = album_magnitude.loc[:,"mean"]
-    sentiment_magnitude = sentiment_magnitude.melt(id_vars=["album"])
-    
-    
-    # Plot with FacetGrid
-    g = sns.FacetGrid(sentiment_magnitude, col="variable", sharey="none")
-    g2 = g.map(sns.barplot, "album", "value", palette = sns.color_palette(colours), orient = "v", order = sentiment_magnitude.album.unique()).set_titles("{col_name}", fontweight="bold")
-    g2 = g2.set_xticklabels(sentiment_magnitude.album.unique(), rotation=60, horizontalalignment='right')
-    plt.show()
+               )  
 
 
 def sentiment_errorplot():
@@ -174,24 +122,6 @@ def sentiment_density_plot():
     ax.set_ylabel("Density")
     plt.show()
     
-def sentiment_song():
-    # Read raw data
-    raw = pd.read_pickle("nl_data/raw_nl_data")
-    song_sentiment = raw[["song", "song_sentiment"]]
-    lowest_sentiments = song_sentiment.sort_values("song_sentiment")[0:5]
-    lowest_sentiments["id"] = "Bottom 5"
-    highest_sentiments = song_sentiment.sort_values("song_sentiment", ascending=False)[0:5]
-    highest_sentiments["id"] = "Top 5"
-    top5s = pd.concat([highest_sentiments, lowest_sentiments])
-      
-    fig, axs = plt.subplots(1,2)
-    axs = axs.ravel()
-    
-    axs[0] = lowest_sentiments.plot(kind="bar", y="song_sentiment", ax = axs[0], x = "song", color = scale_cols_blue, legend=None)
-    axs[1] = highest_sentiments.plot(kind="bar",  y="song_sentiment", ax = axs[1], x = "song", color = scale_cols_green, legend=None)
-       
-    plt.show()
-    
 
 from wordcloud import WordCloud, ImageColorGenerator
 from PIL import Image
@@ -221,43 +151,3 @@ def plot_wordcloud():
     plt.tight_layout()
     plt.show()
     
-    
-def long_words():
-    raw = pd.read_pickle("nl_data/raw_nl_data")
-    
-    n = len(raw)
-    all_words_5 = np.empty([0], dtype="<U30")
-    for i in np.arange(n):
-        words = np.array(list(raw["words"][i][0].keys()))
-        count = np.array(list(raw["words"][i][0].values()))
-        all_words_5 = np.append(all_words_5, words[count > 5])
-    
-    all_lens = [len(a) for a in all_words_5]
-    sns.distplot(all_lens, bins=10);
-    plt.show()
-
-    
-import plotly_keys as mykeys
-import chart_studio
-chart_studio.tools.set_credentials_file(username=mykeys.username,
-                                        api_key=mykeys.api)
-
-import chart_studio.plotly as py
-import plotly.figure_factory as ff
-
-def sentiment_plotly(save=False):
-    
-    sentiment_totals = pd.read_csv("nl_data/sentiment_totals.csv")
-    
-    group_labels = ['distplot'] # name of the dataset
-
-    fig = ff.create_distplot([sentiment_totals["sentiment"].values], 
-                             group_labels, bin_size = 0.15,
-                             show_rug = False)
-    fig.update_layout(
-        xaxis_title = "Sentiment",
-        yaxis_title = "Density"
-    )
-    fig.show()
-    
-    if save: py.plot(fig, filename = "sentiment_density", auto_open=True)

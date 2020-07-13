@@ -66,7 +66,6 @@ def getallwords(A):
     return(" ".join(x2))
 
 
-
 def mean_sd(A, name):
     m = np.mean(A[name])
     s = np.std(A[name])

@@ -33,3 +33,6 @@ stopwords  = ["ourselves", "hers", "between", "yourself", "but", "again", "there
 
 # Album cover filenames
 album_filenames = ["cd.png", "lr.png", "grad.png", "808s.png", "mbdtf.png", "wtt.png", "yeezus_clip.png", "tlop.png", "ye.png", "ksg.png", "jik.png"]
+
+# plotly
+plotly_colours = np.stack([album_order, colours])

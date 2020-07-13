@@ -1,5 +1,9 @@
+# Libraries
+library(tidyverse)
+
+
 ## Read and load data
-raw       = read.csv("nl_data/raw_nl_data.csv")
+raw       = read.csv("nl_data/raw_nl_data.csv", stringsAsFactors = FALSE)
 all_words = as.character(raw$words)
 albums    = as.character(unique(raw$album))
 bigdf     = matrix(0, 0, length(all_words)+1)
@@ -56,17 +60,25 @@ bigdf2 = melt(bigdf)
 bigdf2 = bigdf2[bigdf2$value!=0,]
 bigdf2 = bigdf2[sample(1:nrow(bigdf2), nrow(bigdf2)),]
 bigdf2 = bigdf2[order(bigdf2$value, decreasing = TRUE),]
-#bigdf2 = bigdf2[1:100,]
+
 
 # Remove plurals from words
 remove_plurals = function(x){
+  ignores = c("jesus", "baby jesus", "glass", "mars", 
+              "ass","parties", "glasses", "stress", "bitches")
+  if(x %in% ignores) return(x)
   if(substr(x, nchar(x), nchar(x)) == "s"){
     x = substr(x, 1, nchar(x)-1)
+  }
+  if(substr(x, nchar(x)-1, nchar(x)) == "es"){
+    x = substr(x, 1, nchar(x)-2)
   }
   return(x)
 }
 no_plurals = apply(as.matrix(bigdf2$name), 1, remove_plurals)
 bigdf2$name = no_plurals
+
+# love lockdown
 
 # Censor bad words [content warning]
 badwords = c("fuck", "shit", "nigga")
@@ -92,10 +104,12 @@ censor = function(x){
 censored_words = apply(as.matrix(bigdf2$name), 1, censor)
 bigdf2$name = unlist(censored_words)
 
-# Remove same word to same word mappings, small words (probable errors) and single use words
+# Remove same word to same word mappings and small words (probable errors) 
 bigdf2 = bigdf2[!apply(bigdf2, 1, function(x) x[1] == x[2]),]
 bigdf2 = bigdf2[apply(bigdf2, 1, function(x) nchar(x[1]) > 2 & nchar(x[2]) > 2),]
-bigdf2 = bigdf2[bigdf2$value > 3,]
+
+# Method of reducing the dataset - only include words that occur more than 4 times
+bigdf2 = bigdf2[bigdf2$value > 4,]
 
 
 ## Two column dataframe mappings from word to word
@@ -123,13 +137,9 @@ library(networkD3)
 # Count number of unique pairs of mappings
 bigdf3 = as.data.frame(bigdf3, stringsAsFactors=FALSE)
 bigdf4 = data.frame(t(apply(bigdf3,1,sort)), stringsAsFactors = FALSE) %>% group_by_all %>% count()
-
 colnames(bigdf4) = c("from", "to", "n")
 
-
-
-# Get data in format for networkD3 forceNetwork plot
-
+## Get data in format for networkD3 forceNetwork plot
 nodes = data.frame(name = unlist(bigdf2$name), 
                    group = as.numeric(as.factor(bigdf2$variable)),
                    size = bigdf2$value, stringsAsFactors=FALSE)
@@ -147,6 +157,7 @@ for(i in 1:nrow(bigdf4)){
   to_w = which(nodes$name %in% to)
   links[i, 2] = nodes_i[to_w] 
   
+  # count
   links[i, 3] = as.numeric(bigdf4[i, "n"])
 }
 
@@ -154,23 +165,28 @@ links = as.data.frame(links, stringsAsFactors = FALSE)
 colnames(links) = c("source", "target", "value")
 
 
-write.csv(links, "nl_data/graph_links.csv")
-write.csv(nodes, "nl_data/graph_nodes.csv")
+# write.csv(links, "nl_data/graph_links.csv")
+# write.csv(nodes, "nl_data/graph_nodes.csv")
 
+click_script = 'alert("Total count of \'" + (d.name) + "\': " + (d.size))'
 
-# library(htmltools)
-# browsable(
-#   tagList(
-#     tags$head(
-#       tags$style('
-#         .nodetext{fill: #000000}
-#         .legend text{fill: #FF0000}
-#       ')
-#     ),
-#     forceNetwork(links, as.data.frame(nodes),
-#              Source = "source", Target = "target",
-#              NodeID = "name", Group = 1, Nodesize="size", 
-#              Value = "value",
-#              zoom=TRUE, opacity=0.9,
-#              fontSize = 14)
-# ))
+# plot the network
+fn = forceNetwork(links, as.data.frame(nodes),
+         Source = "source", Target = "target",
+         NodeID = "name", Group = 1, Nodesize="size",
+         Value = "value", linkDistance = JS("function(d){return d.value * 10}"),
+         zoom=TRUE, opacity=0.9, opacityNoHover = 0.3,
+         linkColour = "#c2c2c2", charge = -50,
+         clickAction = click_script,
+         colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+         fontSize = 16, fontFamily = "Calibri")
+
+fn$x$nodes$size <- nodes$size
+fn$x$nodes$name <- nodes$name
+
+htmlwidgets::onRender(
+  fn,
+  'function(el, x) { 
+    d3.selectAll(".node text").style("fill", "black");
+  }'
+)

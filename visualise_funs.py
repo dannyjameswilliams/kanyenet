@@ -203,6 +203,9 @@ def plot_wordcloud():
     
     kanye_colouring = ImageColorGenerator(kanye_mask)
     
+    removals = ["bitch", "ass", "dick", "motherf***er", "pussy", "bitches"]
+    for word in removals: stopwords.append(word)
+    
     text = open(os.path.join("nl_data/all_words.txt")).read()
     wc = WordCloud(background_color="white", 
                    stopwords = stopwords,
@@ -232,4 +235,29 @@ def long_words():
     all_lens = [len(a) for a in all_words_5]
     sns.distplot(all_lens, bins=10);
     plt.show()
+
     
+import plotly_keys as mykeys
+import chart_studio
+chart_studio.tools.set_credentials_file(username=mykeys.username,
+                                        api_key=mykeys.api)
+
+import chart_studio.plotly as py
+import plotly.figure_factory as ff
+
+def sentiment_plotly(save=False):
+    
+    sentiment_totals = pd.read_csv("nl_data/sentiment_totals.csv")
+    
+    group_labels = ['distplot'] # name of the dataset
+
+    fig = ff.create_distplot([sentiment_totals["sentiment"].values], 
+                             group_labels, bin_size = 0.15,
+                             show_rug = False)
+    fig.update_layout(
+        xaxis_title = "Sentiment",
+        yaxis_title = "Density"
+    )
+    fig.show()
+    
+    if save: py.plot(fig, filename = "sentiment_density", auto_open=True)

@@ -1,0 +1,13 @@
+name: kanyenetwork
+title: kanyenetwork
+username:
+account: dannyjameswilliams
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2569526
+bundleId: 3390221
+url: https://dannyjameswilliams.shinyapps.io/kanyenetwork/
+when: 1594725027.71945
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: test/test.R

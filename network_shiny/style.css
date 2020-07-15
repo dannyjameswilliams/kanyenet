@@ -1,0 +1,45 @@
+#controls {
+  background-color: rgba(232, 241, 255, 0.35);
+  padding: 30px 20px 20px 30px;
+  opacity: 0.9;
+  zoom: 0.9;
+  /*transition: opacity 500ms 1s;*/
+  
+}
+
+
+#sent_controls {
+  background-color: rgba(232, 241, 255, 0.35);
+  padding: 30px 20px 20px 30px;
+  opacity: 0.9;
+  zoom: 0.9;
+  transition: opacity 500ms 1s;
+  
+}
+
+#sent_song_controls {
+  background-color: rgba(232, 241, 255, 0.35);
+  padding: 30px 20px 20px 30px;
+  opacity: 0.9;
+  zoom: 0.9;
+  transition: opacity 500ms 1s;
+  
+}
+
+
+#sent_tab {
+  color: black;
+}
+
+#mag_tab {
+  color: black;
+}
+
+.navbar { background-color: red;}
+.navbar-default .navbar-brand{color: white;}
+.tab-panel{ 
+  background-color: red; 
+  color: white;
+  font-size: 40px;
+}
+

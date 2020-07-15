@@ -93,7 +93,7 @@ def plot_plotly(fit_mag, fit_sen, save=False):
                                      ),
                              hovertext=metacritic['album'],
                              hoverlabel=dict(namelength=0),
-                             hovertemplate='<b>%{hovertext}</b><br>Sentiment: %{x} <br>Score: %{y}'
+                             hovertemplate='<b>%{hovertext}</b><br>Magnitude: %{x} <br>Score: %{y}'
         )
     )
     fig2.add_trace(go.Scatter(x=metacritic["magnitude_mean"], 

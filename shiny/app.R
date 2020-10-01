@@ -145,7 +145,8 @@ get_sentiment_by_song_plot = function(album, type){
   dat = dat[,c("album", "song", type)]
   colnames(dat)[3] = "variable"
   
-  song_order = read.csv("data/song_album.csv", stringsAsFactors = FALSE)
+  song_order = read.csv("data/new_lyrics_clean.csv", stringsAsFactors = FALSE)
+  song_order = song_order[,c("Album", "Song")]
   song_order$order = 1:nrow(song_order)
   colnames(song_order) = c("album", "song", "order")
   
